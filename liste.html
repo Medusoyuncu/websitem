@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Başvuru Listesi</title>
+  <style>
+    body { font-family: sans-serif; padding: 30px; background: #f4f4f4; }
+    table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; }
+    th, td { padding: 10px; border: 1px solid #ccc; }
+    th { background: #eee; }
+    input[type="text"] {
+      padding: 10px;
+      width: 100%;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+    button.sil {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button.sil:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gelen Başvurular</h1>
+  <input type="text" id="arama" placeholder="İsim veya alana göre ara...">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Ad Soyad</th>
+        <th>Yaş</th>
+        <th>Alan</th>
+        <th>Portföy</th>
+        <th>Not</th>
+        <th>Tarih</th>
+        <th>Sil</th>
+      </tr>
+    </thead>
+    <tbody id="liste"></tbody>
+  </table>
+
+  <script>
+    let basvurular = JSON.parse(localStorage.getItem("basvurular") || "[]");
+    const tbody = document.getElementById("liste");
+    const aramaInput = document.getElementById("arama");
+
+    function listeyiGuncelle() {
+      tbody.innerHTML = "";
+      const filtre = aramaInput.value.toLowerCase();
+
+      basvurular.forEach((b, i) => {
+        if (
+          b.ad.toLowerCase().includes(filtre) ||
+          b.alan.toLowerCase().includes(filtre)
+        ) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${b.ad}</td>
+            <td>${b.yas}</td>
+            <td>${b.alan}</td>
+            <td><a href="${b.portfoy}" target="_blank">${b.portfoy}</a></td>
+            <td>${b.not}</td>
+            <td>${b.tarih}</td>
+            <td><button class="sil" onclick="sil(${i})">Sil</button></td>
+          `;
+          tbody.appendChild(tr);
+        }
+      });
+    }
+
+    function sil(index) {
+      if (confirm("Bu başvuruyu silmek istediğine emin misin?")) {
+        basvurular.splice(index, 1);
+        localStorage.setItem("basvurular", JSON.stringify(basvurular));
+        listeyiGuncelle();
+      }
+    }
+
+    aramaInput.addEventListener("input", listeyiGuncelle);
+    listeyiGuncelle();
+  </script>
+</body>
+</html>
