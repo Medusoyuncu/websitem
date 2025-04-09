@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Başvuru Formu</title>
+  <style>
+    body { font-family: sans-serif; padding: 30px; background: #f9f9f9; }
+    input, textarea { width: 100%; margin: 10px 0; padding: 10px; }
+    button { padding: 10px 20px; background: green; color: white; border: none; }
+  </style>
+</head>
+<body>
+  <h1>Başvuru Formu</h1>
+  <form id="basvuruForm">
+    <input type="text" placeholder="Ad Soyad" name="ad" required>
+    <input type="text" placeholder="Yaş" name="yas" required>
+    <input type="text" placeholder="Alan (Unity, Blender vs)" name="alan" required>
+    <input type="text" placeholder="Portföy (link varsa)" name="portfoy">
+    <input type="text" placeholder="Telefon Numarası " name="telefon"> <!-- Burayı ekledik -->
+    <textarea name="not" placeholder="Kendinden bahset" required></textarea>
+    <button type="submit">Gönder</button>
+  </form>
+
+  <script>
+    document.getElementById("basvuruForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const veri = {
+        ad: form.ad.value,
+        yas: form.yas.value,
+        alan: form.alan.value,
+        portfoy: form.portfoy.value,
+        telefon: form.telefon.value, // Telefon bilgisi burada
+        not: form.not.value,
+        tarih: new Date().toLocaleString()
+      };
+
+      let basvurular = JSON.parse(localStorage.getItem("basvurular") || "[]");
+      basvurular.push(veri);
+      localStorage.setItem("basvurular", JSON.stringify(basvurular));
+      alert("Başvuru gönderildi!");
+      form.reset();
+    });
+  </script>
+</body>
+</html>
